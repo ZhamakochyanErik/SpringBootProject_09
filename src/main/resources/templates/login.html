@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta id="registerError" th:content="#{register.error}">
+
+    <title th:text="#{login}">login</title>
+
+    <!-- Bootstrap 4.0-->
+    <link rel="stylesheet" href="/resources/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- Bootstrap extend-->
+    <link rel="stylesheet" href="/resources/app/css/bootstrap-extend.css">
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/resources/app/css/master_style.css">
+
+    <!-- BonitoPro Admin skins -->
+    <link rel="stylesheet" href="/resources/app/css/skins/_all-skins.css">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .place-red::placeholder{
+            color: red;
+        }
+        .place-white::placeholder{
+            color: white;
+        }
+    </style>
+</head>
+<body class="hold-transition login-page">
+
+<div class="container h-p100">
+    <div class="row align-items-center justify-content-md-center h-p100">
+        <div class="col-lg-4 col-md-8 col-12">
+            <div th:if="${#request.getParameter('error') ne null}" class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa fa-ban"></i>
+                    <span th:text="#{attention}">Attention!</span>
+                </h4>
+                <span th:text="#{login.error.message}">
+                    login error message
+                </span>
+            </div>
+            <div th:if="${#request.getParameter('email-error') ne null}" class="alert alert-danger alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa fa-ban"></i>
+                    <span th:text="#{attention}">Attention!</span>
+                </h4>
+                <span th:text="#{login.email.error.message}">
+                    login email error message
+                </span>
+            </div>
+            <div th:if="${#request.getParameter('email-confirmed') ne null}" class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa fa-ban"></i>
+                    <span th:text="#{attention}">Attention!</span>
+                </h4>
+                <span th:text="#{login.email.success.message}">
+                    login email success message
+                </span>
+            </div>
+            <div th:if="${#request.getParameter('email-message-send') ne null}" class="alert alert-success alert-dismissible">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                <h4><i class="icon fa fa-ban"></i>
+                    <span th:text="#{attention}">Attention!</span>
+                </h4>
+                <span th:text="#{login.email.send.message}">
+                    login email success message
+                </span>
+            </div>
+            <div class="login-box bg-img rounded" style="background-image:url(/resources/app/images/friends.jpg);"
+                 data-overlay="5">
+                <div class="login-box-body">
+                    <div>
+                        <a th:if="${#strings.equals(#locale.language,'en')}" style="cursor: pointer;text-decoration: none;color: #69cce0">
+                            EN
+                        </a>
+                        <a th:unless="${#strings.equals(#locale.language,'en')}" style="text-decoration: none;color: white" th:href="@{${#request.getRequestURI()}(lang='en')}">
+                            EN
+                        </a>
+                        <span>|</span>
+                        <a th:if="${#strings.equals(#locale.language,'ru')}" style="cursor: pointer;text-decoration: none;color: #69cce0">
+                            RU
+                        </a>
+                        <a th:unless="${#strings.equals(#locale.language,'ru')}" style="text-decoration: none;color: white" th:href="@{${#request.getRequestURI()}(lang='ru')}">
+                            RU
+                        </a>
+                        <span>|</span>
+                        <a th:if="${#strings.equals(#locale.language,'arm')}" style="cursor: pointer;text-decoration: none;color: #69cce0">
+                            ARM
+                        </a>
+                        <a th:unless="${#strings.equals(#locale.language,'arm')}" th:href="@{${#request.getRequestURI()}(lang='arm')}" style="text-decoration: none;color: white">
+                            ARM
+                        </a>
+
+                    </div>
+                    <h3 id="login-title" class="text-center" th:text="#{login}">Login</h3>
+
+
+                    <form action="/login" method="post" class="form-element text-white" id="login-form">
+                        <div class="form-group has-feedback">
+                            <input type="email" class="form-control text-white place-white" id="email" name="email" th:placeholder="#{email}">
+                            <span class="ion ion-email form-control-feedback text-white"></span>
+                        </div>
+                        <div class="form-group has-feedback">
+                            <input type="password" class="form-control text-white place-white" id="password" name="password" th:placeholder="#{password}">
+                            <span class="ion ion-locked form-control-feedback text-white"></span>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <div class="checkbox">
+                                    <input type="checkbox" id="basic_checkbox_1" name="remember-me">
+                                    <label for="basic_checkbox_1" th:text="#{remember.me}">Remember Me</label>
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-6">
+                                <div class="fog-pwd text-right">
+                                    <a href="/forgot/password" class="text-white"><i class="ion ion-locked"></i>
+                                        <span th:text="#{forgot.password}">Forgot pwd?<span></a><br>
+                                </div>
+                            </div>
+                            <!-- /.col -->
+                            <div class="col-12 text-center">
+                                <button id="login-button" type="submit" class="btn btn-info btn-block margin-top-10" th:text="#{login}">SIGN IN</button>
+                            </div>
+                            <!-- /.col -->
+                        </div>
+                    </form>
+
+                    <div class="margin-top-30 text-center">
+                        <p>
+                            <span th:text="#{dont.have.account}">Don't have an account? </span>
+                            <a href="/register" class="text-info m-l-5" th:text="#{register}">Sign Up</a>
+                        </p>
+                    </div>
+
+                </div>
+                <!-- /.login-box-body -->
+            </div>
+            <!-- /.login-box -->
+
+        </div>
+    </div>
+</div>
+
+
+<!-- jQuery 3 -->
+<script src="/resources/assets/vendor_components/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+
+<!-- popper -->
+<script src="/resources/assets/vendor_components/popper/dist/popper.min.js"></script>
+
+<!-- Bootstrap 4.0-->
+<script src="/resources/assets/vendor_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<script src="/resources/js/login.js"></script>
+</body>
+</html>

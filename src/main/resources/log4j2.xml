@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" strict="true">
+    <properties>
+        <property name="filePath" value="D:/web/friend-finder/logging"/>
+    </properties>
+
+    <Appenders>
+        <!--Console appender-->
+        <Appender type="Console" name="consoleAppender">
+            <Layout type="PatternLayout" pattern="%clr{%d{yyyy-MM-dd HH:mm:ss}}{faint} %clr{%level} %clr{}{magenta} %clr{---}{faint} %clr{[%15.15t]}{faint} %clr{%c{1}.%M}{cyan} %clr{:}{faint} %m%n%xwEx"/>
+        </Appender>
+        <!--Frameworks file appender-->
+        <Appender type="RollingFile" name="frameworksFileAppender" fileName="${filePath}/framework.txt" filePattern="${filePath}/framework_%i.txt">
+            <Layout type="PatternLayout" pattern="%d{yyyy-MM-dd HH:mm:ss} %level --- [%t] %c{1}.%M : %m%n%xwEx"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20Mb" />
+            </Policies>
+        </Appender>
+        <!--App file appender-->
+        <Appender type="RollingFile" name="appFileAppender" fileName="${filePath}/app.txt" filePattern="${filePath}/app_%i.txt">
+            <Layout type="PatternLayout" pattern="%d{yyyy-MM-dd HH:mm:ss} %level --- [%t] %c{1}.%M : %m%n%xwEx"/>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="20Mb" />
+            </Policies>
+        </Appender>
+    </Appenders>
+
+    <Loggers>
+        <!--App logger-->
+        <Logger name="friendfinder.net" level="all" additivity="false">
+            <AppenderRef ref="consoleAppender"/>
+            <!--<AppenderRef ref="appFileAppender"/>-->
+        </Logger>
+        <!--Root logger-->
+        <Root level="info">
+            <AppenderRef ref="consoleAppender"/>
+            <!--<AppenderRef ref="frameworksFileAppender"/>-->
+        </Root>
+    </Loggers>
+</Configuration>
