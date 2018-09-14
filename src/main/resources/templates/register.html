@@ -6,12 +6,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <meta name="description" content="">
     <meta name="author" content="">
-    <meta id="registerError" th:content="#{register.error}">
-    <meta id="name_" th:content="#{name}">
-    <meta id="surname_" th:content="#{surname}">
-    <meta id="email_" th:content="#{email}">
-    <meta id="password_" th:content="#{password}">
-    <meta id="rePassword_" th:content="#{re.password}">
     <meta id="lang" th:content="${#locale.language}">
 
     <title th:text="#{register}">Registration</title>
@@ -98,14 +92,14 @@
                     <form id="register-form" action="/register" method="post" th:object="${userForm}" class="form-element text-white">
                         <div class="form-group has-feedback">
                             <input th:if="${#fields.hasErrors('name')}" style="background-image: linear-gradient(red ,red), linear-gradient(red, red)"
-                                   type="text" class="form-control text-white place-red reg-input" th:field="*{name}" th:placeholder="#{register.error}">
+                                   type="text" class="form-control text-white place-red reg-input" th:field="*{name}">
                             <input th:unless="${#fields.hasErrors('name')}"
                                    type="text" class="form-control text-white place-white reg-input" th:field="*{name}" th:placeholder="#{name}">
                             <span class="ion ion-person form-control-feedback text-white"></span>
                         </div>
                         <div class="form-group has-feedback">
                             <input th:if="${#fields.hasErrors('surname')}" style="background-image: linear-gradient(red ,red), linear-gradient(red, red)"
-                                   type="text" th:field="*{surname}" class="form-control text-white place-red reg-input"  th:placeholder="#{register.error}">
+                                   type="text" th:field="*{surname}" class="form-control text-white place-red reg-input"  >
 
                             <input th:unless="${#fields.hasErrors('surname')}"
                                    type="text" th:field="*{surname}" class="form-control text-white place-white reg-input" th:placeholder="#{surname}">
@@ -113,7 +107,7 @@
                         </div>
                         <div class="form-group has-feedback">
                             <input th:if="${#fields.hasErrors('email')}" style="background-image: linear-gradient(red ,red), linear-gradient(red, red)"
-                                   type="email" th:field="*{email}" class="form-control text-white place-red reg-input"  th:placeholder="#{register.error}">
+                                   type="email" th:field="*{email}" class="form-control text-white place-red reg-input"  >
 
                             <input th:unless="${#fields.hasErrors('email')}"
                                    type="email" th:field="*{email}" class="form-control text-white place-white reg-input" th:placeholder="#{email}">
@@ -121,7 +115,7 @@
                         </div>
                         <div class="form-group has-feedback">
                             <input id="password" th:if="${#fields.hasErrors('password')}" style="background-image: linear-gradient(red ,red), linear-gradient(red, red)"
-                                    type="password" class="form-control text-white place-red reg-input" th:field="*{password}" th:placeholder="#{register.error}">
+                                    type="password" class="form-control text-white place-red reg-input" th:field="*{password}">
 
                             <input id="password" th:unless="${#fields.hasErrors('password')}"
                                     type="password" class="form-control text-white place-white reg-input" th:field="*{password}" th:placeholder="#{password}">
@@ -129,7 +123,7 @@
                         </div>
                         <div class="form-group has-feedback">
                             <input id="rePassword" th:if="${#fields.hasErrors('rePassword')}" style="background-image: linear-gradient(red ,red), linear-gradient(red, red)"
-                                    type="password" class="form-control text-white place-red reg-input" th:field="*{rePassword}" th:placeholder="#{register.error}">
+                                    type="password" class="form-control text-white place-red reg-input" th:field="*{rePassword}" >
 
                             <input id="rePassword" th:unless="${#fields.hasErrors('rePassword')}"
                                     type="password" class="form-control text-white place-white reg-input" th:field="*{rePassword}" th:placeholder="#{re.password}">

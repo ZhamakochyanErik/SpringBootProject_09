@@ -50,7 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/login","/register","/city")
+                .antMatchers("/login","/register","/city","/forgot/password",
+                        "/recover-password/**","/recover-password")
                 .anonymous()
                 .antMatchers("/admin","/admin/**")
                 .hasAuthority(UserRole.ADMIN.name())
@@ -61,8 +62,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
                 .usernameParameter("email")
-                .failureUrl("/login?error")
-                .defaultSuccessUrl("/additional/verification")
+                .failureHandler(new AuthenticationFailureHandlerImpl())
+                .defaultSuccessUrl("/")
         .and()
                 .logout()
                 .logoutSuccessUrl("/login")

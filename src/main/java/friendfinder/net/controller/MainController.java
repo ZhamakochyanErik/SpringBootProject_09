@@ -12,7 +12,6 @@ public class MainController {
 
     @GetMapping("/")
     public String main(){
-        LOGGER.info("Hello World");
         return "index";
     }
 }

@@ -16,20 +16,12 @@ $(document).ready(function () {
                 event.preventDefault();
                 $("#password").attr("style","background-image: linear-gradient(red ,red), linear-gradient(red, red)");
                 $("#password").attr("class","form-control text-white place-red reg-input")
-                $("#password").attr("placeholder",registerError);
                 $("#rePassword").attr("style","background-image: linear-gradient(red ,red), linear-gradient(red, red)");
                 $("#rePassword").attr("class","form-control text-white place-red reg-input")
-                $("#rePassword").attr("placeholder",registerError);
             }
         }
     })
 });
-var registerError = $("#registerError").attr("content");
-var name = $("#name_");
-var surname = $("#surname_");
-var email = $("#email_");
-var password = $("#password_");
-var rePassword = $("#rePassword_");
 
 function isValidData(name, value, event,input) {
     switch (name){
@@ -37,13 +29,11 @@ function isValidData(name, value, event,input) {
             if(value == null || value.length < 2 || value.length > 255){
                 $(input).attr("style","background-image: linear-gradient(red ,red), linear-gradient(red, red)");
                 $(input).attr("class","form-control text-white place-red reg-input")
-                $(input).attr("placeholder",registerError);
                 event.preventDefault();
                 return false;
             }else {
                 $(input).attr("style","background-image: linear-gradient(#69cce0 , #69cce0), linear-gradient(#d9d9d9, #d9d9d9)");
                 $(input).attr("class","form-control text-white place-white reg-input");
-                $(input).attr("placeholder",name);
                 return true;
             }
             break;
@@ -51,27 +41,23 @@ function isValidData(name, value, event,input) {
             if(value == null || value.length < 2 || value.length > 255){
                 $(input).attr("style","background-image: linear-gradient(red ,red), linear-gradient(red, red)");
                 $(input).attr("class","form-control text-white place-red reg-input")
-                $(input).attr("placeholder",registerError);
                 event.preventDefault();
                 return false;
             }else {
                 $(input).attr("style","background-image: linear-gradient(#69cce0 , #69cce0), linear-gradient(#d9d9d9, #d9d9d9)");
                 $(input).attr("class","form-control text-white place-white reg-input");
-                $(input).attr("placeholder",surname);
                 return true;
             }
             break;
         case "email":
-            if(value == null || value.length < 2 || value.length > 255){
+            if(value == null || value.length < 11 || value.length > 255){
                 $(input).attr("style","background-image: linear-gradient(red ,red), linear-gradient(red, red)");
                 $(input).attr("class","form-control text-white place-red reg-input")
-                $(input).attr("placeholder",registerError);
                 event.preventDefault();
                 return false;
             }else {
                 $(input).attr("style","background-image: linear-gradient(#69cce0 , #69cce0), linear-gradient(#d9d9d9, #d9d9d9)");
                 $(input).attr("class","form-control text-white place-white reg-input");
-                $(input).attr("placeholder",email);
                 return true;
             }
             break;
@@ -79,13 +65,11 @@ function isValidData(name, value, event,input) {
             if(value == null || value.length < 4 || value.length > 255){
                 $(input).attr("style","background-image: linear-gradient(red ,red), linear-gradient(red, red)");
                 $(input).attr("class","form-control text-white place-red reg-input")
-                $(input).attr("placeholder",registerError);
                 event.preventDefault();
                 return false;
             }else {
                 $(input).attr("style","background-image: linear-gradient(#69cce0 , #69cce0), linear-gradient(#d9d9d9, #d9d9d9)");
                 $(input).attr("class","form-control text-white place-white reg-input");
-                $(input).attr("placeholder",password);
                 return true;
             }
             break;
@@ -93,13 +77,11 @@ function isValidData(name, value, event,input) {
             if(value == null || value.length < 4 || value.length > 255){
                 $(input).attr("style","background-image: linear-gradient(red ,red), linear-gradient(red, red)");
                 $(input).attr("class","form-control text-white place-red reg-input")
-                $(input).attr("placeholder",registerError);
                 event.preventDefault();
                 return false;
             }else {
                 $(input).attr("style","background-image: linear-gradient(#69cce0 , #69cce0), linear-gradient(#d9d9d9, #d9d9d9)");
                 $(input).attr("class","form-control text-white place-white reg-input");
-                $(input).attr("placeholder",rePassword);
                 return true;
             }
             break;

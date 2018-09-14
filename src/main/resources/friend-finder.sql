@@ -47,7 +47,7 @@ create table message(
   id int not null auto_increment primary key ,
   from_id int not null ,
   to_id int not null ,
-  message text not null ,
+  message text,
   img_url varchar(255),
   message_status varchar(255) not null ,
   send_date datetime not null ,
@@ -103,4 +103,17 @@ create table comment(
   foreign key (user_id) references user(id) on delete cascade ,
   foreign key (post_id) references post(id) on delete cascade ,
   foreign key (parent_id) references comment(id) on delete cascade
+)engine InnoDB character set utf8 collate utf8_general_ci;
+
+create table notification(
+  id int not null auto_increment primary key ,
+  notification_type varchar(255) not null ,
+  notification_status varchar(255) not null ,
+  notification_date datetime ,
+  to_id int not null ,
+  from_id int,
+  post_id int,
+  foreign key (to_id) references user(id) on delete cascade ,
+  foreign key (from_id) references user(id) on delete cascade ,
+  foreign key (post_id) references post(id) on delete cascade
 )engine InnoDB character set utf8 collate utf8_general_ci;
