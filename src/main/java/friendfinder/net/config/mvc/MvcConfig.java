@@ -27,7 +27,10 @@ public class MvcConfig implements WebMvcConfigurer {
                 .addPathPatterns("/**");
         registry
                 .addInterceptor(authenticationInterceptor)
-                .addPathPatterns("/");
+                .addPathPatterns("/","/post/*","/user/profile","/user/*/profile",
+                        "/user/settings","/user/settings/**","/user/images","/user/*/images",
+                        "/user/friends","/user/*/friends","/user/bookmark","/user/messages",
+                        "/user/messages/to/*","/user/search");
     }
 
     @Bean

@@ -1,6 +1,10 @@
 package friendfinder.net.dto;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 @Data
 @NoArgsConstructor
@@ -8,13 +12,9 @@ import lombok.*;
 @Builder
 public class MessageRequestDto {
 
-    private int id;
-
-    private UserDto from;
+    private int userId;
 
     private String message;
 
-    private String imgUrl;
-
-    private String sendDate;
+    private MultipartFile image;
 }

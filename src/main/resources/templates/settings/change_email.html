@@ -1,0 +1,1068 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta id="messages-title-lefth" th:content="#{messages.title.left}">
+    <meta id="lang" th:content="${#locale.language}">
+    <meta id="messages-title-right" th:content="#{messages.title.right}">
+    <meta id="messages-emty-text" th:content="#{messages.empty.text}">
+    <meta id="notification-title-right" th:content="#{notification.right}">
+    <meta id="notification-empty-text" th:content="#{notification.empty.text}">
+    <meta id="friendRequestTitle" th:content="#{friend.reqeust.title}">
+    <meta id="postCommentTitle" th:content="#{post.comment.title}">
+    <meta id="postLikeTitle" th:content="#{like.title}">
+    <meta id="postDislikeTitle" th:content="#{dislike.title}">
+    <meta id="notOnlcick" content="true">
+    <meta id="notificationExists" content="true">
+    <meta id="reply" th:content="#{reply}">
+    <meta id="commentPlaceholder" th:content="#{comment.placeholder}">
+    <meta id="send" th:content="#{send}">
+    <meta th:if="${user.profileImg ne null}" id="userImg" th:content="'/resources/users/' + ${user.profileImg}">
+    <meta th:if="${user.profileImg eq null}" id="userImg" content="/resources/images/profile.png">
+    <meta id="loadMore" th:content="#{load.more}">
+    <meta id="isCurrentUser" th:content="${userProfile eq null ? 'true' : 'false'}">
+    <meta th:if="${userProfile eq null}" id="userId" th:content="${user.id}">
+    <meta th:if="${userProfile ne null}" id="userId" th:content="${userProfile.id}">
+    <meta id="deteteText" th:content="#{delete}">
+    <meta id="postsEmptyText" th:content="#{posts.empty}">
+    <meta id="youSendRequest" th:content="#{you.send.friend.request}">
+    <meta id="cancelRequest" th:content="#{cancel.request}">
+    <meta id="addFriend" th:content="#{add.friend}">
+    <meta id="youFriends" th:content="#{you.friends}">
+    <meta id="deleteFriend" th:content="#{delete.friend}">
+
+    <title th:if="${userProfile eq null}" th:text="${user.name} + ' ' + ${user.surname}"></title>
+    <title th:if="${userProfile ne null}" th:text="${userProfile.name} + ' ' + ${userProfile.surname}"></title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css"
+          integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+
+    <!-- Bootstrap 4.0-->
+    <link rel="stylesheet" href="/resources/assets/vendor_components/bootstrap/dist/css/bootstrap.min.css">
+
+    <!-- Bootstrap extend-->
+    <link rel="stylesheet" href="/resources/app/css/bootstrap-extend.css">
+
+    <!-- Theme style -->
+    <link rel="stylesheet" href="/resources/app/css/master_style.css">
+
+    <!-- BonitoPro Admin skins -->
+    <link rel="stylesheet" href="/resources/app/css/skins/_all-skins.css">
+
+    <script src="/resources/assets/vendor_components/jquery-3.3.1/jquery-3.3.1.min.js"></script>
+    <script src="/resources/js/post-comment.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+</head>
+
+<body class="hold-transition skin-blue dark-sidebar sidebar-mini">
+
+<div id="friend-request-alert" style="display: none" class="alert alert-success alert-dismissible">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+    <h4><i class="icon fa fa-ban"></i>
+        <span th:text="#{attention}">Attention!</span>
+    </h4>
+    <span th:text="#{login.email.success.message}">
+                    login email success message
+                </span>
+</div>
+<div class="wrapper">
+
+    <header class="main-header" style="position: fixed;width: 100%">
+        <!-- Logo -->
+        <a href="/" class="logo">
+            Friend Finder
+        </a>
+        <!-- Header Navbar -->
+        <nav class="navbar navbar-static-top">
+            <!-- Sidebar toggle button-->
+            <a style="cursor: pointer" class="sidebar-toggle" data-toggle="push-menu" role="button">
+                <span class="sr-only">Toggle navigation</span>
+            </a>
+
+            <div class="navbar-custom-menu">
+                <ul class="nav navbar-nav">
+                    <!-- User Account-->
+                    <li class="dropdown user user-menu">
+                        <a href="social.html#" class="dropdown-toggle" data-toggle="dropdown">
+                            <span th:text="${user.name} + ' ' + ${user.surname}"></span>
+                            <img id="profile-img_" th:if="${user.profileImg eq null}" class="rounded-circle" width="33px"
+                                 src="/resources/images/profile.png">
+                            <img id="profile-img_" th:if="${user.profileImg ne null}" class="rounded-circle" width="33px"
+                                 th:src="@{/resources/users/{img}(img = ${user.profileImg})}">
+                        </a>
+                        <ul class="dropdown-menu scale-up">
+                            <!-- User image -->
+                            <li class="user-header">
+                                <img id="cover-image__" th:if="${user.coverImg eq null}"
+                                     src="/resources/images/cover.jpg" class="img-fluid" th:alt="${user.name}">
+
+                                <img id="cover-image__" th:if="${user.coverImg ne null}"
+                                     th:src="@{/resources/users/{img}(img = ${user.coverImg})}" class="img-fluid"
+                                     th:alt="${user.name}">
+                            </li>
+                            <!-- Menu Body -->
+                            <li class="user-body">
+                                <div class="row no-gutters">
+                                    <div class="col-12 text-left">
+                                        <a href="/user/profile">
+                                            <i class="ion ion-person"></i>
+                                            <span th:text="#{my.profile}">My profile</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-12 text-left">
+                                        <a href="/user/messages">
+                                            <i class="ion ion-email-unread"></i>
+                                            <span th:text="#{my.messages}">My messages</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-12 text-left">
+                                        <a href="/user/settings">
+                                            <i class="ion ion-settings"></i>
+                                            <span th:text="#{settings}">Settings</span>
+                                        </a>
+                                    </div>
+                                    <div class="col-12 text-left">
+                                        <a href="/logout">
+                                            <i class="fa fa-power-off"></i>
+                                            <span th:text="#{logout}">Logout</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                <!-- /.row -->
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Messages -->
+                    <li class="dropdown messages-menu">
+                        <a style="cursor: pointer" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="mdi mdi-email"></i>
+                            <span id="message-count"></span>
+                        </a>
+                        <ul class="dropdown-menu scale-up" style="height: 300px;">
+                            <li id="messagesTile" class="header"></li>
+                            <li>
+                                <!-- inner menu: contains the actual data -->
+                                <ul class="menu inner-content-div" id="message-ul">
+                                    <!-- end message -->
+                                </ul>
+                            </li>
+                            <li class="footer"><a href="/user/messages" th:text="#{all.messages}">all messages</a></li>
+                        </ul>
+                        <script>
+                            var messageTitleLeft = $("#messages-title-lefth").attr("content");
+                            var messageTitleRight = $("#messages-title-right").attr("content");
+                            var messageEmptyText = $("#messages-emty-text").attr("content");
+
+                            $.ajax({
+                                type: "GET",
+                                url: "/message",
+                                contentType: "application/json",
+                                success: function (messages) {
+                                    if (messages.length == 0) {
+                                        $("#messagesTile").text(messageEmptyText);
+                                    } else {
+                                        $.each(messages, function (i, message) {
+                                            $("#message-count").text(messages.length);
+                                            $("#messagesTile").text(messageTitleLeft + ' ' + messages.length + ' ' + messageTitleRight);
+                                            var liTag = '<li class="li-tag">' +
+                                                '<a href="/user/messages/to/' + message.from.id + '">' +
+                                                '<div class="pull-left">';
+                                            if (message.from.profileImg == null) {
+                                                liTag += '<img src="/resources/images/profile.png" class="rounded-circle" alt="' + message.from.name + '">'
+                                            } else {
+                                                liTag += '<img src="/resources/users/' + message.from.profileImg + '" class="rounded-circle" alt="' + message.from.name + '">'
+                                            }
+                                            liTag += '</div>' +
+                                                '<div class="mail-contnet">';
+                                            var nameText = message.from.name + ' ' + message.from.surname;
+                                            if ((message.from.name.length + message.from.surname.length + 1) > 11) {
+                                                liTag += '<h4 >' + nameText.substring(0, 11);
+                                            } else {
+                                                liTag += '<h4>' + nameText;
+
+                                            }
+                                            liTag += '<small style="margin-right: -13px"><i class="fa fa-clock-o"></i>' + message.sendDate + '</small>' +
+                                                '</h4>';
+                                            if (message.message == null) {
+                                                liTag += '<span><img style="width: 30px;height: 30px;" src="/resources/messages/' + message.imgUrl + '"></span>';
+                                            } else if (message.message.length > 33) {
+                                                liTag += '<span>' + message.message.substring(0, 33) + '...</span>'
+                                            } else {
+                                                liTag += '<span>' + message.message + '</span>'
+                                            }
+                                            liTag += '</div>' +
+                                                '</a>' +
+                                                '</li>';
+                                            $("#message-ul").append(liTag);
+                                        })
+                                    }
+                                },
+                                error: function () {
+                                    window.location = "/404";
+                                }
+                            });
+                        </script>
+                    </li>
+
+                    <!-- Notifications -->
+                    <li class="dropdown notifications-menu">
+                        <a id="notification-li_" style="cursor: pointer" class="dropdown-toggle load"
+                           data-toggle="dropdown">
+                            <i class="mdi mdi-bell"></i>
+                            <span id="notificationCount"></span>
+                        </a>
+                        <ul class="dropdown-menu scale-up">
+                            <li class="header" id="notificationTitle"></li>
+                            <li>
+                                <!-- inner menu: contains the actual data -->
+                                <ul class="menu inner-content-div" id="notification-ul" style="height: 190px;">
+                                </ul>
+                            </li>
+                            <li class="footer">
+                                <a href="/user/notifications" th:text="#{all.notifications}">all notifications</a>
+                            </li>
+                        </ul>
+                        <script>
+                            var notificationTitleRight = $("#notification-title-right").attr("content");
+                            var notificationEmptyText = $("#notification-empty-text").attr("content");
+                            var friendRequesTitle = $("#friendRequestTitle").attr("content");
+                            var postCommentTitle = $("#postCommentTitle").attr("content");
+                            var postLikeTitle = $("#postLikeTitle").attr("content");
+                            var postDislikeTile = $("#postDislikeTitle").attr("content");
+                            $.ajax({
+                                type: "GET",
+                                url: "/notification",
+                                contentType: "application/json",
+                                success: function (notificationRespone) {
+                                    if (notificationRespone.notifications.length == 0) {
+                                        $("#notificationTitle").text(notificationEmptyText);
+                                    } else {
+                                        $("#notification-li_").attr("id", "notification-li");
+
+                                        $.each(notificationRespone.notifications, function (i, notification) {
+                                            var liTag;
+                                            if (notification.type == "FRIEND_REQUEST") {
+                                                if (i + 1 == notificationRespone.notifications.length && notificationRespone.notifications.length == 10) {
+                                                    liTag = ' <li class="last_not not-li" id="' + notification.id + '">' +
+                                                        '<div style="margin: 20px">';
+                                                } else {
+                                                    liTag = ' <li class="not-li" id="' + notification.id + '">' +
+                                                        '<div style="margin: 20px">';
+                                                }
+                                                if (notification.from.profileImg == null) {
+                                                    liTag += '<img class="rounded-circle" style="height: 46px;width: 49px;" src="/resources/images/profile.png">';
+                                                } else {
+                                                    liTag += '<img class="rounded-circle" style="height: 46px;width: 49px" src="/resources/users/' + notification.from.profileImg + '">';
+                                                }
+                                                var nameText = notification.from.name + ' ' + notification.from.surname;
+                                                if ((notification.from.name.length + notification.from.surname.length + 1) > 11) {
+                                                    nameText = nameText.substring(0, 11);
+                                                }
+
+                                                liTag += '<a style="margin-left: 3px" href="/user/' + notification.from.id + '/profile">' + nameText + '</a>' +
+                                                    '<span style="margin-left: 8px">' +notification.date +'</span>' +
+                                                    '<div style="display: flex;justify-content: space-around">' +
+                                                    '<p>' + friendRequesTitle + '</p>' +
+                                                    '<a  class="add-friend" href="/friend/add/' + notification.from.id + '"   id="' + notification.from.id + '-add">' +
+                                                    '<i class="fa fa-user-plus"></i>' +
+                                                    '</a>' +
+                                                    '<a class="delete-friend" href="/friend/delete/' + notification.from.id + '" id="' + notification.from.id + '-delete">' +
+                                                    '<i class="fa fa-close"></i>' +
+                                                    '</a>' +
+                                                    '</div>' +
+                                                    '</div>' +
+                                                    '</li>' +
+                                                    '<li>' +
+                                                    '<hr/>' +
+                                                    '</li>';
+                                            } else if (notification.type == "POST_COMMENT") {
+                                                if (i + 1 == notificationRespone.notifications.length && notificationRespone.notifications.length == 10) {
+                                                    liTag = ' <li class="last_not not-li" id="' + notification.id + '">' +
+                                                        '<div style="margin: 20px">';
+                                                } else {
+                                                    liTag = ' <li class="not-li" id="' + notification.id + '">' +
+                                                        '<div style="margin: 20px">';
+                                                }
+                                                if (notification.from.profileImg == null) {
+                                                    liTag += '<img class="rounded-circle" style="height: 46px;width: 49px;" src="/resources/images/profile.png">';
+                                                } else {
+                                                    liTag += '<img class="rounded-circle" style="height: 46px;width: 49px" src="/resources/users/' + notification.from.profileImg + '">';
+                                                }
+                                                var nameText = notification.from.name + ' ' + notification.from.surname;
+                                                if ((notification.from.name.length + notification.from.surname.length + 1) > 11) {
+                                                    nameText = nameText.substring(0, 11);
+                                                }
+                                                liTag += '<a style="margin-left: 3px" href="/user/' + notification.from.id + '/profile">' + nameText + '</a>' +
+                                                    '<span style="margin-left: 8px">' +notification.date +'</span><p>' +
+                                                    '<i class="fa fa-comment"></i>' +
+                                                    '<span>' + postCommentTitle + '</span>' +
+                                                    '</p>' +
+                                                    '<div style="margin: 10px">';
+                                                if (notification.post.imgUrl != null) {
+                                                    liTag += '<img class="rounded-circle" style="height: 38px;width: 39px" src="/resources/posts/' + notification.post.imgUrl + '">';
+                                                }
+                                                var title = "";
+                                                if (notification.post.title != null && notification.post.title.length > 11) {
+                                                    title = notification.post.title.substring(0, 11) + '...';
+                                                } else if(notification.post.title != null){
+                                                    title = notification.post.title;
+                                                }else if(notification.post.description != null && notification.post.description > 11){
+                                                    title = notification.post.description.substring(0, 11) + '...';
+                                                }else if(notification.post.description != null){
+                                                    title = notification.post.description;
+                                                }
+                                                liTag += '<a href="/post/' + notification.post.id + '">' + title + '</a>' +
+                                                    '</div>' +
+                                                    '</div>' +
+                                                    '</li>' +
+                                                    '<li>' +
+                                                    '<hr/>' +
+                                                    '</li>';
+                                            } else if (notification.type == "POST_LIKE") {
+                                                if (i + 1 == notificationRespone.notifications.length && notificationRespone.notifications.length == 10) {
+                                                    liTag = ' <li class="last_not not-li" id="' + notification.id + '">' +
+                                                        '<div style="margin: 20px">';
+                                                } else {
+                                                    liTag = ' <li class="not-li" id="' + notification.id + '">' +
+                                                        '<div style="margin: 20px">';
+                                                }
+                                                if (notification.from.profileImg == null) {
+                                                    liTag += '<img class="rounded-circle" style="height: 46px;width: 49px;" src="/resources/images/profile.png">';
+                                                } else {
+                                                    liTag += '<img class="rounded-circle" style="height: 46px;width: 49px" src="/resources/users/' + notification.from.profileImg + '">';
+                                                }
+                                                var nameText = notification.from.name + ' ' + notification.from.surname;
+                                                if (nameText.length > 11) {
+                                                    nameText = nameText.substring(0, 11);
+                                                }
+                                                liTag += '<a style="margin-left: 3px" href="/user/' + notification.from.id + '/profile">' + nameText + '</a>' +
+                                                    '<span style="margin-left: 8px">' +notification.date +'</span>'+'<p>' +
+                                                    '<i class="ti-thumb-up"></i>' +
+                                                    '<span>' + postLikeTitle + '</span>' +
+                                                    '</p>' +
+                                                    '<div style="margin: 10px">';
+                                                if (notification.post.imgUrl != null) {
+                                                    liTag += '<img class="rounded-circle" style="height: 38px;width: 39px" src="/resources/posts/' + notification.post.imgUrl + '">';
+                                                }
+                                                var title = "";
+
+
+                                                if (notification.post.title != null && notification.post.title.length > 11) {
+                                                    title = notification.post.title.substring(0, 11) + '...';
+                                                } else if(notification.post.title != null){
+                                                    title = notification.post.title;
+                                                }else if(notification.post.description != null && notification.post.description > 11){
+                                                    title = notification.post.description.substring(0, 11) + '...';
+                                                }else if(notification.post.description != null){
+                                                    title = notification.post.description;
+                                                }
+                                                liTag += '<a href="/post/' + notification.post.id + '">' + title + '</a>' +
+                                                    '</div>' +
+                                                    '</div>' +
+                                                    '</li>' +
+                                                    '<li>' +
+                                                    '<hr/>' +
+                                                    '</li>';
+                                            } else {
+                                                if (i + 1 == notificationRespone.notifications.length && notificationRespone.notifications.length == 10) {
+                                                    liTag = ' <li class="last_not not-li" id="' + notification.id + '">' +
+                                                        '<div style="margin: 20px">';
+                                                } else {
+                                                    liTag = ' <li class="not-li" id="' + notification.id + '">' +
+                                                        '<div style="margin: 20px">';
+                                                }
+                                                if (notification.from.profileImg == null) {
+                                                    liTag += '<img class="rounded-circle" style="height: 46px;width: 49px;" src="/resources/images/profile.png">';
+                                                } else {
+                                                    liTag += '<img class="rounded-circle" style="height: 46px;width: 49px" src="/resources/users/' + notification.from.profileImg + '">';
+                                                }
+                                                var nameText = notification.from.name + ' ' + notification.from.surname;
+                                                if (nameText.length > 11) {
+                                                    nameText = nameText.substring(0, 11);
+                                                }
+                                                liTag += '<a style="margin-left: 3px" href="/user/' + notification.from.id + '/profile">  ' + nameText + '</a>' +
+                                                    '<span style="margin-left: 8px">' +notification.date +'</span><p>' +
+                                                    '<i class="ti-thumb-down"></i>' +
+                                                    '<span>' + postDislikeTile + '</span>' +
+                                                    '</p>' +
+                                                    '<div style="margin: 10px">';
+                                                if (notification.post.imgUrl != null) {
+                                                    liTag += '<img class="rounded-circle" style="height: 38px;width: 39px" src="/resources/posts/' + notification.post.imgUrl + '">';
+                                                }
+                                                var title = "";
+
+                                                if (notification.post.title != null && notification.post.title.length > 11) {
+                                                    title = notification.post.title.substring(0, 11) + '...';
+                                                } else if(notification.post.title != null){
+                                                    title = notification.post.title;
+                                                }else if(notification.post.description != null && notification.post.description > 11){
+                                                    title = notification.post.description.substring(0, 11) + '...';
+                                                }else if(notification.post.description != null){
+                                                    title = notification.post.description;
+                                                }
+                                                liTag += '<a href="/post/' + notification.post.id + '">' + title + '</a>' +
+                                                    '</div>' +
+                                                    '</div>' +
+                                                    '</li>' +
+                                                    '<li>' +
+                                                    '<hr/>' +
+                                                    '</li>';
+                                            }
+                                            $("#notification-ul").append(liTag);
+                                        })
+                                        if (notificationRespone.count != 0) {
+                                            $("#notificationCount").text(notificationRespone.count);
+                                            $("#notificationTitle").text(messageTitleLeft + ' ' + notificationRespone.count + ' ' + notificationTitleRight);
+                                        } else {
+                                            $("#notificationTitle").text(notificationEmptyText);
+                                        }
+                                    }
+                                },
+                                error: function () {
+                                    window.location = "/404";
+                                }
+                            })
+                        </script>
+                    </li>
+                    <!-- Tasks-->
+                    <li class="dropdown tasks-menu">
+                        <a style="cursor: pointer" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class="fa fa-language" aria-hidden="true"></i>
+                        </a>
+                        <ul class="dropdown-menu scale-up">
+                            <li class="header" th:text="#{choose.language}">choose a language</li>
+                            <li>
+                                <!-- inner menu: contains the actual data -->
+                                <ul class="menu inner-content-div">
+                                    <li th:if="${#strings.equals(#locale.language,'en')}"><!-- Task item -->
+                                        <a style="cursor: pointer">
+                                            <h3>
+                                                <span th:text="#{english}"></span>
+                                                <small class="pull-right">
+                                                    <img src="/resources/icons/england.png">
+                                                </small>
+                                            </h3>
+                                        </a>
+                                    <li th:unless="${#strings.equals(#locale.language,'en')}"><!-- Task item -->
+                                        <a th:href="@{${#request.getRequestURI()}(lang='en')}">
+                                            <h3>
+                                                <span th:text="#{english}"></span>
+                                                <small class="pull-right">
+                                                    <img src="/resources/icons/england.png">
+                                                </small>
+                                            </h3>
+                                        </a>
+                                    </li>
+                                    <li th:if="${#strings.equals(#locale.language,'ru')}"><!-- Task item -->
+                                        <a style="cursor: pointer">
+                                            <h3>
+                                                <span th:text="#{russia}"></span>
+                                                <small class="pull-right">
+                                                    <img src="/resources/icons/russia.png">
+                                                </small>
+                                            </h3>
+                                        </a>
+                                    <li th:unless="${#strings.equals(#locale.language,'ru')}"><!-- Task item -->
+                                        <a th:href="@{${#request.getRequestURI()}(lang='ru')}">
+                                            <h3>
+                                                <span th:text="#{russia}"></span>
+                                                <small class="pull-right">
+                                                    <img src="/resources/icons/russia.png">
+                                                </small>
+                                            </h3>
+                                        </a>
+                                    </li>
+                                    <li th:if="${#strings.equals(#locale.language,'arm')}"><!-- Task item -->
+                                        <a style="cursor: pointer">
+                                            <h3>
+                                                <span th:text="#{armenian}"></span>
+                                                <small class="pull-right">
+                                                    <img src="/resources/icons/armenia.png">
+                                                </small>
+                                            </h3>
+                                        </a>
+                                    <li th:unless="${#strings.equals(#locale.language,'arm')}"><!-- Task item -->
+                                        <a th:href="@{${#request.getRequestURI()}(lang='arm')}">
+                                            <h3>
+                                                <span th:text="#{armenian}"></span>
+                                                <small class="pull-right">
+                                                    <img src="/resources/icons/armenia.png">
+                                                </small>
+                                            </h3>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </li>
+                    <!-- Control Sidebar Toggle Button
+                    <li>
+                        <a href="social.html#" data-toggle="control-sidebar"><i class="fa fa-cog fa-spin"></i></a>
+                    </li>
+                    -->
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Left side column. contains the sidebar -->
+    <aside style="position:fixed;" class="main-sidebar">
+        <!-- sidebar-->
+        <section class="sidebar">
+
+            <!-- Sidebar user panel -->
+            <div class="user-panel">
+                <!-- search form -->
+                <form action="/user/search" class="sidebar-form">
+                    <div class="input-group">
+                        <input type="text" name="name" class="form-control" th:placeholder="#{search} + '...'">
+                        <span class="input-group-btn">
+					<button type="submit" id="search-btn" class="btn btn-flat"><i
+                            class="fa fa-search"></i>
+					</button>
+				  </span>
+                    </div>
+                </form>
+                <!-- /.search form -->
+            </div>
+
+            <!-- sidebar menu-->
+            <ul class="sidebar-menu">
+                <li class="treeview">
+                    <a href="/">
+                        <i class="fa fa-home" aria-hidden="true"></i>
+                        <span th:text="#{home.page}">Home page</span>
+                    </a>
+                </li>
+                <li class="treeview">
+                    <a href="/user/profile">
+                        <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+                        <span th:text="#{my.profile}">My profile</span>
+                    </a>
+                </li>
+                <li class="treeview">
+                    <a href="/user/messages">
+                        <i class="fa fa-envelope" aria-hidden="true"></i>
+                        <span th:text="#{my.messages}">Messages</span>
+                    </a>
+                </li>
+                <li class="treeview">
+                    <a href="/user/friends">
+                        <i class="fa fa-users" aria-hidden="true"></i>
+                        <span th:text="#{my.friends}">Friends</span>
+                    </a>
+                </li>
+
+                <li class="treeview">
+                    <a href="/user/bookmark">
+                        <i class="fa fa-bookmark-o" aria-hidden="true"></i>
+                        <span th:text="#{my.bookmark}">Bookmark</span>
+                    </a>
+                </li>
+                <li class="treeview">
+                    <a href="/user/images">
+                        <i class="fa fa-image" aria-hidden="true"></i>
+                        <span th:text="#{my.images}">Images</span>
+                    </a>
+                </li>
+
+                <li class="treeview">
+                    <a href="/user/settings">
+                        <i class="fa fa-gear" aria-hidden="true"></i>
+                        <span th:text="#{settings}">Settings</span>
+                    </a>
+                </li>
+            </ul>
+        </section>
+
+        <div class="sidebar-footer">
+            <!-- item-->
+            <a href="/user/images" class="link" data-toggle="tooltip" title="" data-original-title="Settings"><i
+                    class="fa fa-image"></i>
+            </a>
+            <!-- item-->
+            <a href="/user/messages" class="link" data-toggle="tooltip" title="" data-original-title="Email"><i
+                    class="fa fa-envelope"></i></a>
+            <!-- item-->
+            <a href="/logout" class="link" data-toggle="tooltip" title="" data-original-title="Logout"
+               aria-describedby="tooltip995664"><i class="fa fa-power-off"></i></a>
+        </div>
+    </aside>
+
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <h1>
+                User Profile
+            </h1>
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="profile.html#"><i class="fa fa-dashboard"></i> Home</a></li>
+                <li class="breadcrumb-item"><a href="profile.html#">Examples</a></li>
+                <li class="breadcrumb-item active">User profile</li>
+            </ol>
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+
+            <div class="row">
+                <div  class="col-lg-8 col-12">
+                    <th:block th:if="${userProfile eq null}">
+                        <th:block th:if="${user.coverImg ne null}">
+                            <div id="user-cover-img" class="box box-inverse bg-img"
+                                 th:style="'background-image: url(/resources/users/' + ${user.coverImg} +');'" data-overlay="2">
+                        </th:block>
+                        <th:block th:unless="${user.coverImg ne null}">
+                            <div id="user-cover-img" class="box box-inverse bg-img"
+                                 style="background-image: url(/resources/images/cover.jpg);" data-overlay="2">
+                        </th:block>
+                    </th:block>
+                    <th:block th:if="${userProfile ne null}">
+                        <th:block th:if="${userProfile.coverImg ne null}">
+                            <div class="box box-inverse bg-img"
+                                 th:style="'background-image: url(/resources/users/' + ${userProfile.coverImg} +');'" data-overlay="2">
+                        </th:block>
+                        <th:block th:unless="${userProfile.coverImg ne null}">
+                            <div class="box box-inverse bg-img"
+                                 style="background-image: url(/resources/images/cover.jpg);" data-overlay="2">
+                        </th:block>
+                    </th:block>
+
+                        <div class="box-body text-center pb-50">
+                            <th:block th:if="${userProfile eq null}">
+                                <a th:if="${user.profileImg ne null}" th:href="@{/resources/users/{img}(img = ${user.profileImg})}">
+                                    <img id="user-profile-img" class="avatar avatar-xxl avatar-bordered"
+                                         th:src="@{/resources/users/{img}(img = ${user.profileImg})}"
+                                         alt="">
+                                </a>
+                                <a th:if="${user.profileImg eq null}" href="/resources/images/profile.png">
+                                    <img id="user-profile-img" class="avatar avatar-xxl avatar-bordered" src="/resources/images/profile.png"
+                                         alt="">
+                                </a>
+                            </th:block>
+                            <th:block th:if="${userProfile ne null}">
+                                <a th:if="${userProfile.profileImg ne null}" th:href="@{/resources/users/{img}(img = ${userProfile.profileImg})}">
+                                    <img class="avatar avatar-xxl avatar-bordered"
+                                         th:src="@{/resources/users/{img}(img = ${userProfile.profileImg})}"
+                                         alt="">
+                                </a>
+                                <a th:if="${userProfile.profileImg eq null}" href="/resources/images/profile.png">
+                                    <img class="avatar avatar-xxl avatar-bordered" src="/resources/images/profile.png"
+                                         alt="">
+                                </a>
+                            </th:block>
+                            <th:block th:if="${userProfile eq null}">
+                                <h4 class="mt-2 mb-0">
+                                    <a class="hover-primary text-white"
+                                       href="/user/profile" th:text="${user.name} + ' ' + ${user.surname}">name surname</a>
+                                </h4>
+                            </th:block>
+                            <th:block th:if="${userProfile ne null}">
+                                <h4 class="mt-2 mb-0">
+                                    <a class="hover-primary text-white"
+                                       href="/user/profile" th:text="${userProfile.name} + ' ' + ${userProfile.surname}">name surname</a>
+                                </h4>
+                            </th:block>
+                        </div>
+
+                        <ul class="box-body flexbox flex-justified text-center" data-overlay="4">
+                            <th:block th:if="${userProfile eq null}">
+                                <li style="margin-top: 10px">
+                                    <a href="/user/settings">
+                                    <span class="opacity-60">
+                                    <i class="fa fa-gear" style="font-size: 18px;color: white"></i>
+                                </span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/user/friends">
+                                    <span class="opacity-60">
+                                        <i class="fa fa-users" style="color: white"></i>
+                                    </span>
+                                        <span class="font-size-20" style="color: white"
+                                              th:text="${profileData.friendsCount}">8457</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a href="/user/images">
+                                    <span class="opacity-60">
+                                        <i class="fa fa-image" style="color: white"></i>
+                                    </span>
+                                        <span class="font-size-20" style="color: white"
+                                              th:text="${profileData.imagesCount}">2154</span>
+                                    </a>
+                                </li>
+                            </th:block>
+                            <th:block th:if="${userProfile ne null}">
+                                <li>
+                                    <a th:href="@{/user/{id}/friends(id = ${userProfile.id})}">
+                                    <span class="opacity-60">
+                                        <i class="fa fa-users" style="color: white"></i>
+                                    </span>
+                                        <span class="font-size-20" style="color: white"
+                                              th:text="${profileData.friendsCount}">8457</span>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a th:href="@{/user/{id}/images(id = ${userProfile.id})}">
+                                    <span class="opacity-60">
+                                        <i class="fa fa-image" style="color: white"></i>
+                                    </span>
+                                        <span class="font-size-20" style="color: white"
+                                              th:text="${profileData.imagesCount}">2154</span>
+                                    </a>
+                                </li>
+                            </th:block>
+                        </ul>
+                    </div>
+
+
+                    <!-- Profile Image -->
+                    <div class="box">
+                        <div class="box-body box-profile">
+                            <div class="row">
+                                <div class="col-md-4 col-12">
+                                    <th:block th:if="${userProfile eq null}">
+                                        <div class="profile-user-info">
+                                            <p>
+                                            <span th:text="#{age} + ': ' + ${user.age}">
+                                                age
+                                            </span>
+                                            </p>
+                                            <p>
+                                                <span th:if="${#strings.equals(#locale.language,'en')}" th:text="#{city} + ': ' + ${user.city.nameEn}">city :</span>
+                                                <span th:if="${#strings.equals(#locale.language,'ru')}" th:text="#{city} + ': ' + ${user.city.nameRu}">city :</span>
+                                                <span th:if="${#strings.equals(#locale.language,'arm')}" th:text="#{city} + ': ' + ${user.city.nameArm}">city :</span>
+                                            </p>
+                                            <p>
+                                            <span th:text="#{email} + ': ' + ${user.email}">
+                                                Email:
+                                            </span>
+                                            </p>
+                                        </div>
+                                    </th:block>
+                                    <th:block th:if="${userProfile ne null}">
+                                        <div class="profile-user-info">
+                                            <p>
+                                            <span th:text="#{age} + ': ' + ${userProfile.age}">
+                                                age
+                                            </span>
+                                            </p>
+                                            <p>
+                                                <span th:if="${#strings.equals(#locale.language,'en')}" th:text="#{city} + ': ' + ${userProfile.city.nameEn}">city :</span>
+                                                <span th:if="${#strings.equals(#locale.language,'ru')}" th:text="#{city} + ': ' + ${userProfile.city.nameRu}">city :</span>
+                                                <span th:if="${#strings.equals(#locale.language,'arm')}" th:text="#{city} + ': ' + ${userProfile.city.nameArm}">city :</span>
+                                            </p>
+                                            <p>
+                                            <span th:text="#{email} + ': ' + ${userProfile.email}">
+                                                Email:
+                                            </span>
+                                            </p>
+
+                                        </div>
+                                    </th:block>
+                                </div>
+                                <!-- Add user request delete user request   -->
+                                <th:block th:if="${userProfile eq null}">
+                                    <div class="col-md-3 col-12" style="flex: 0 0 65%;max-width: 100%;">
+                                        <div class="profile-user-info">
+                                            <div class="btn-group">
+                                                <form method="post" id="profile-image-form" enctype="multipart/form-data">
+                                                    <input id="profileImage" type="file" name="image" class="inputfile">
+                                                    <label style="cursor: pointer;font-size: 20px" for="profileImage" th:text="#{change.profile.image} + '  '">
+                                                    </label>
+                                                </form>
+                                            </div>
+                                            <div class="btn-group">
+                                                <form method="post" id="cover-image-form" enctype="multipart/form-data">
+                                                    <input id="coverImage" type="file" name="image" class="inputfile">
+                                                    <label style="cursor: pointer;font-size: 20px" for="coverImage" th:text="#{change.cover.image} + '  '">aa
+                                                    </label>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </th:block>
+                                <th:block th:if="${userProfile ne null}">
+                                    <div class="col-md-3 col-12" style="flex: 0 0 65%;max-width: 100%;">
+                                        <div class="profile-user-info" id="friend-request-blog">
+                                            <!-- does not friends -->
+                                            <div th:if="${requestData.lastCase}" class="btn-group">
+                                                <button id="add-friend" type="button" class="btn btn-info"
+                                                        th:text="#{add.friend}">
+                                                </button>
+                                            </div>
+                                            <!--does not friends END-->
+
+                                            <!--freind request sendded  but not accepted&ndash-->
+                                            <th:block th:if="${requestData.youSend}">
+                                                <th:block th:if="${#strings.equals(#locale.language,'en')}">
+                                                    <h4 th:text="#{you.send.friend.request}"></h4>
+                                                    <div style="margin-left: 39px" class="btn-group">
+                                                        <button id="cancel-request" type="button" class="btn btn-default bg-danger border-danger" th:text="#{cancel.request}"></button>
+                                                    </div>
+                                                </th:block>
+                                                <th:block th:if="${#strings.equals(#locale.language,'ru')}">
+                                                    <h4 th:text="#{you.send.friend.request}"></h4>
+                                                    <div style="margin-left: 48px" class="btn-group">
+                                                        <button id="cancel-request" type="button" class="btn btn-default bg-danger border-danger" th:text="#{cancel.request}"></button>
+                                                    </div>
+                                                </th:block>
+                                                <th:block th:if="${#strings.equals(#locale.language,'arm')}">
+                                                    <h4 th:text="#{you.send.friend.request}"></h4>
+                                                    <div style="margin-left: 71px" class="btn-group">
+                                                        <button id="cancel-request" type="button" class="btn btn-default bg-danger border-danger" th:text="#{cancel.request}"></button>
+                                                    </div>
+                                                </th:block>
+                                            </th:block>
+
+                                            <th:block th:if="${requestData.userSend}">
+                                                <th:block th:if="${#strings.equals(#locale.language,'en')}">
+                                                    <h4 th:text="${userProfile.name} + ' ' + #{user.send.request}"></h4>
+                                                    <div style="margin-left: 30px" class="btn-group">
+                                                        <button id="cancel-request" type="button" class="btn btn-default bg-danger border-danger" th:text="#{delete}"></button>
+                                                        <button id="accept-request" type="button" class="btn btn-default bg-blue border-white" th:text="#{accept}"></button>
+                                                    </div>
+                                                </th:block>
+                                                <th:block th:if="${#strings.equals(#locale.language,'ru')}">
+                                                    <h4 th:text="${userProfile.name} + ' ' + #{user.send.request}"></h4>
+                                                    <div style="margin-left: 43px" class="btn-group">
+                                                        <button id="cancel-request" type="button" class="btn btn-default bg-danger border-danger" th:text="#{delete}"></button>
+                                                        <button id="accept-request" type="button" class="btn btn-default bg-blue border-white" th:text="#{accept}"></button>
+                                                    </div>
+                                                </th:block>
+                                                <th:block th:if="${#strings.equals(#locale.language,'arm')}">
+                                                    <h4 th:text="${userProfile.name} + ' ' + #{user.send.request}"></h4>
+                                                    <div style="margin-left: 86px" class="btn-group">
+                                                        <button id="cancel-request" type="button" class="btn btn-default bg-danger border-danger" th:text="#{delete}"></button>
+                                                        <button id="accept-request" type="button" class="btn btn-default bg-blue border-white" th:text="#{accept}"></button>
+                                                    </div>
+                                                </th:block>
+                                            </th:block>
+                                            <!--freind request sendded  but not accepted&ndash Ended-->
+
+                                            <!--Friends-->
+                                            <th:block th:if="${requestData.accepted}">
+                                                <th:block th:unless="${#strings.equals(#locale.language,'ru')}">
+                                                    <h2 th:text="#{you.friends}">you friends</h2>
+                                                    <div style="margin-left: 49px;" class="btn-group">
+                                                        <button id="cancel-request" type="button" class="btn btn-info bg-danger border-danger" th:text="#{delete.friend}">delete friends</button>
+                                                    </div>
+                                                </th:block>
+                                                <th:block th:if="${#strings.equals(#locale.language,'ru')}">
+                                                    <h2 th:text="#{you.friends}">you friends</h2>
+                                                    <div  class="btn-group">
+                                                        <button id="cancel-request" type="button" class="btn btn-info bg-danger border-danger" th:text="#{delete.friend}">delete friends</button>
+                                                    </div>
+                                                </th:block>
+                                            </th:block>
+                                            <!--Friends EN-->
+                                        </div>
+                                    </div>
+                                </th:block>
+                            </div>
+                        </div>
+                        <!-- /.box-body -->
+                    </div>
+                    <!-- /.box -->
+                    <div class="nav-tabs-custom box-profile">
+                        <ul class="nav nav-tabs">
+                            <th:block th:if="${userProfile eq null}">
+                                <li>
+                                    <a th:if="${#strings.equals(#request.getRequestURI(),'/user/profile')}" class="active"
+                                       style="cursor: pointer" th:text="#{posts}">settings</a>
+                                    <a th:unless="${#strings.equals(#request.getRequestURI(),'/user/profile')}"
+                                       href="/user/profile" th:text="#{posts}">settings</a>
+                                </li>
+                                <li>
+                                    <a class="active"
+                                       style="cursor: pointer" th:text="#{settings}">settings</a>
+                                </li>
+                                <li>
+                                    <a th:if="${#strings.equals(#request.getRequestURI(),'/user/friends')}"
+                                       class="active" style="cursor: pointer" th:text="#{my.friends}">friends</a>
+                                    <a th:unless="${#strings.equals(#request.getRequestURI(),'/user/friends')}"
+                                       href="/user/friends" th:text="#{my.friends}">friends</a>
+                                </li>
+                                <li>
+                                    <a th:if="${#strings.equals(#request.getRequestURI(),'/user/friends')}" class="active"
+                                       style="cursor: pointer" th:text="#{my.images}">images</a>
+                                    <a th:unless="${#strings.equals(#request.getRequestURI(),'/user/friends')}"
+                                       href="/user/images" th:text="#{my.images}">images</a>
+                                </li>
+                                <li>
+                                    <a th:if="${#strings.equals(#request.getRequestURI(),'/user/bookmark')}" class="active"
+                                       style="cursor: pointer" th:text="#{my.bookmark}">bookmark</a>
+                                    <a th:unless="${#strings.equals(#request.getRequestURI(),'/user/friends')}"
+                                       href="/user/bookmark" th:text="#{my.bookmark}">bookamrk</a>
+                                </li>
+                            </th:block>
+                        </ul>
+
+                        <div class="tab-content">
+
+                                <div class="row" id="post-blog" style="width: 1066px;margin-left: 198px;">
+                                    <form action="/user/settings/change/email" method="post" style="width: 314px;">
+                                        <div th:if="${#request.getParameter('success-send-message') ne null}" class="alert alert-success alert-dismissible">
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                            <h4><i class="icon fa fa-ban"></i>
+                                                <span th:text="#{attention}">Attention!</span>
+                                            </h4>
+                                            <span th:text="#{login.email.send.message}" >
+                                                email success message
+                                            </span>
+                                        </div>
+                                        <div th:if="${#request.getParameter('error-email-already-exists') ne null}" class="alert alert-danger alert-dismissible">
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                            <h4><i class="icon fa fa-ban"></i>
+                                                <span th:text="#{attention}">Attention!</span>
+                                            </h4>
+                                            <span th:text="#{user.settings.email.error}" >
+                                                user settins email error
+                                            </span>
+                                        </div>
+                                        <div th:if="${#request.getParameter('success-email-confirmed') ne null}" class="alert alert-success alert-dismissible">
+                                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                                            <h4><i class="icon fa fa-ban"></i>
+                                                <span th:text="#{attention}">Attention!</span>
+                                            </h4>
+                                            <span th:text="#{new.email.confirmed}" >
+                                                new email confirmed message
+                                            </span>
+                                        </div>
+                                        <h2 th:text="#{change} + ' ' + #{email}"></h2>
+                                        <div class="form-group">
+                                            <p th:if="${emailError ne null}" style="color: red"
+                                               th:text="#{email.error}"></p>
+                                            <label for="email" th:text="#{new.email}">email</label>
+                                            <input type="email" class="form-control" id="email" name="email"  aria-describedby="emailHelp"
+                                                   th:placeholder="#{email} + '...'">
+                                        </div>
+                                        <div class="form-group">
+                                            <p th:if="${passwordError ne null}" style="color: red"
+                                               th:text="#{password.error}"></p>
+                                            <label for="password" th:text="#{password}">password</label>
+                                            <input type="password" id="password" class="form-control" name="password"  aria-describedby="emailHelp"
+                                                   th:placeholder="#{password} + '...'">
+                                        </div>
+                                        <div  style="margin-left: 85px" class="form-group">
+                                                <button type="submit" class="btn btn-primary bg-blue border-white" th:text="#{change}">change</button>
+                                        </div>
+                                    </form>
+                                </div>
+                        </div>
+                        <ul class="nav nav-tabs" style="width: 489px;margin-left: 115px;">
+                            <li>
+                                <a href="/user/settings"  th:text="#{update} + ' ' + #{data}">update data</a>
+                            </li>
+                            <li>
+                                <a class="active"  style="cursor: pointer" th:text="#{change} + ' ' + #{email}">change email</a>
+                            </li>
+                            <li>
+                                <a href="/user/settings/change/password" th:text="#{change} + ' ' + #{password}">change password</a>
+                            </li>
+                        </ul>
+
+                        <!-- /.tab-content -->
+                    </div>
+                    <!-- /.nav-tabs-custom -->
+                </div>
+                <!-- /.col -->
+
+                <div th:if="${#lists.size(profileData.friends) > 0}" class="col-12 col-lg-4"
+                     style="max-width: 29.333333%;position: fixed;margin-left: 726px">
+                    <div class="box box-widget widget-user-4">
+                        <!-- Add the bg color to the header using any of the bg-* classes -->
+                        <h2 style="color: #69cce0;text-align: center" th:text="#{friends}">Friends</h2>
+                        <th:block th:each="friend : ${profileData.friends}">
+                            <a class="box box-body box-hover-shadow bg-blue"
+                               style="background-color: white;border-color: white"
+                               th:href="@{/user/{id}/profile(id = ${friend.id})}">
+                                <div class="flexbox align-items-center">
+                                    <img th:if="${friend.profileImg eq null}" class="avatar avatar-lg"
+                                         src="/resources/images/profile.png" alt="...">
+                                    <img th:if="${friend.profileImg ne null}" class="avatar avatar-lg"
+                                         th:src="@{/resources/users/{img}(img = ${friend.profileImg})}" alt="...">
+                                    <div class="text-right">
+                                        <h6 class="mb-0" style="color: #444444"
+                                            th:text="${friend.name} + ' ' + ${friend.surname}">name surname</h6>
+                                    </div>
+                                </div>
+                            </a>
+                        </th:block>
+                        <th:block th:if="${#lists.size(profileData.friends) == 4}">
+                            <a style="color: #69cce0;font-size: 18px" th:if="${userProfile eq null}" href="/user/friends" th:text="'...' + #{show.all}">
+                                ...show all
+                            </a>
+                            <a style="color: #69cce0;font-size: 18px" th:if="${userProfile ne null}" th:href="@{/user/{id}/friends(id=${userProfile.id})}" th:text="'...' + #{show.all}">
+                                ...show all
+                            </a>
+                        </th:block>
+                    </div>
+                </div>
+
+            </div>
+            <!-- /.row -->
+
+        </section>
+        <!-- /.content -->
+    </div>
+
+    <!-- /.content-wrapper -->
+
+    <footer class="main-footer">
+        <div class="pull-right d-none d-sm-inline-block">
+            <ul class="nav nav-primary nav-dotted nav-dot-separated justify-content-center justify-content-md-end">
+            </ul>
+        </div>
+        &copy; 2018 <a href="/">Friend finder...</a>
+    </footer>
+    <!-- Add the sidebar's background. This div must be placed immediately after the control sidebar -->
+    <div class="control-sidebar-bg"></div>
+</div>
+<!-- ./wrapper -->
+
+<!-- jQuery 3 -->
+<!-- popper -->
+<!--<script src="/resources/assets/vendor_components/popper/dist/popper.min.js"></script>-->
+
+<!-- Bootstrap 4.0-->
+<script src="/resources/assets/vendor_components/bootstrap/dist/js/bootstrap.min.js"></script>
+
+<!-- ***************************************************************************************-->
+<!-- ***************************************************************************************-->
+<!-- ***************************************************************************************-->
+
+<!--<script src="/resources/assets/vendor_components/jquery-slimscroll/jquery.slimscroll.js"></script>-->
+
+<!-- ***************************************************************************************-->
+<!-- ***************************************************************************************-->
+<!-- ***************************************************************************************-->
+
+
+<!-- FastClick -->
+<script src="/resources/assets/vendor_components/fastclick/lib/fastclick.js"></script>
+
+<!-- BonitoPro Admin App -->
+<!--<script src="/resources/app/js/template.js"></script>-->
+
+<!-- BonitoPro Admin for demo purposes -->
+<!--<script src="/resources/app/js/demo.js"></script>-->
+
+<script src="/resources/js/generic.js"></script>
+<script src="/resources/js/user-update.js"></script>
+<script src="/resources/js/user-image.js"></script>
+</body>
+</html>

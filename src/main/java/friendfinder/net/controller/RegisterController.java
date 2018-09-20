@@ -126,7 +126,7 @@ public class RegisterController implements Pages{
                 .build();
     }
 
-    private int getAge(Date date){
+    static int getAge(Date date){
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String[] dateArray = dateFormat.format(date).split("-");
         String[] currentDateArray = dateFormat.format(new Date()).split("-");

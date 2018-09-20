@@ -539,7 +539,7 @@ a:active, a:focus, a:hover {
     position: relative;
     width: 100%;
     padding: 0;
-    background-image: url(../../images/user-info.jpg);
+    background-image: url(/resources/app/images/user-info.jpg);
 }
 .user-panel:after, .user-panel:before {
     content: " ";
@@ -14813,8 +14813,23 @@ hr {
 #gallery-header-center {
     text-align: right;
 }
+.inputfile {
+    width: 300px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+.inputfile + label {
+    font-size: 1.25em;
+    font-weight: 700;
+    color:#69cce0;
+    background-color: white;
+    display: inline-block;
+}
 
-
-
-
-
+.inputfile:focus + label,
+.inputfile + label:hover {
+    background-color: white;
+}

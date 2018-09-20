@@ -99,7 +99,7 @@ create table comment(
   user_id int not null ,
   post_id int not null ,
   send_date datetime not null ,
-  parent_id int not null ,
+  parent_id int,
   foreign key (user_id) references user(id) on delete cascade ,
   foreign key (post_id) references post(id) on delete cascade ,
   foreign key (parent_id) references comment(id) on delete cascade
@@ -117,3 +117,28 @@ create table notification(
   foreign key (from_id) references user(id) on delete cascade ,
   foreign key (post_id) references post(id) on delete cascade
 )engine InnoDB character set utf8 collate utf8_general_ci;
+
+create table user_bookmark(
+  from_id int not null ,
+  to_id int not null ,
+  foreign key (from_id) references user(id)on delete cascade ,
+  foreign key (to_id) references user(id) on delete cascade
+)engine InnoDB character set utf8 collate utf8_general_ci;
+
+
+insert into city (name_en, name_ru, name_arm) values
+  ('Erevan','Ереван','Երեվան'),
+  ('Ashtarak','Аштарак','Աշտարակ'),
+  ('Aparan','Апаран','Ապարան'),
+  ('Talin','Талин','Թալին'),
+  ('Artashat','Арташат','Արտաշատ'),
+  ('Ararat','Арарат','Արարատ'),
+  ('Vedi','Веди','Վեդի'),
+  ('Masis','Масис','Մասիս'),
+  ('Vagharshapat','Вагаршапат','Էջմիածին'),
+  ('Armavir','Армавир','Արմավիր'),
+  ('Mecamor','Мецамор','Մեծամոր'),
+  ('Exegnadzor','Ехегнадзор','Եղեգնաձոր'),
+  ('Vayq','Вайк','Վայք'),
+  ('Djermuk','Джермук','Ջերմուկ'),
+  ('Gyumri','Гюмри','Գյումրի');

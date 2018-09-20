@@ -1,17 +1,16 @@
 package friendfinder.net.controller;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import friendfinder.net.model.User;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestAttribute;
 
 @Controller
-public class MainController {
-
-    private static final Logger LOGGER = LogManager.getLogger();
+public class MainController implements Pages{
 
     @GetMapping("/")
-    public String main(){
-        return "index";
+    public String main(@RequestAttribute("user")User user, Model model){
+        return INDEX;
     }
 }

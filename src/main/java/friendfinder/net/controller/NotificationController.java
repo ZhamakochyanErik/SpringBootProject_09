@@ -1,17 +1,17 @@
 package friendfinder.net.controller;
 
 import friendfinder.net.config.security.CurrentUser;
+import friendfinder.net.dto.IntegerDto;
+import friendfinder.net.dto.NotificationResponseDto;
 import friendfinder.net.service.NotificationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -34,9 +34,16 @@ public class NotificationController {
     public @ResponseBody
     ResponseEntity updateStatus(@RequestBody List<Integer> notificationList){
         LOGGER.debug("notifications : {}",notificationList);
-        notificationService.updateStatus(notificationList);
         return ResponseEntity
-                .ok()
-                .build();
+                .ok(new IntegerDto(notificationService.updateStatus(notificationList)));
+    }
+
+    @GetMapping("/notifications/page/{page}")
+    public @ResponseBody
+    ResponseEntity loadNotifications(@PathVariable("page")int page,@AuthenticationPrincipal CurrentUser user){
+        NotificationResponseDto notificationResponseDto = notificationService.getAllByUserId(user.getUser().getId(),
+                PageRequest.of(page, 10));
+        return ResponseEntity
+                .ok(notificationResponseDto);
     }
 }

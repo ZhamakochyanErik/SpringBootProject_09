@@ -1,10 +1,13 @@
 package friendfinder.net.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import friendfinder.net.model.enums.ActivationType;
 import friendfinder.net.model.enums.UserRole;
 import lombok.*;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Data
@@ -44,4 +47,14 @@ public class User {
 
     @ManyToOne
     private City city;
+
+    @JsonIgnore
+    @ManyToMany
+    @JoinTable(name = "user_bookmark",joinColumns = @JoinColumn(name = "from_id"),
+    inverseJoinColumns = @JoinColumn(name = "to_id"))
+    private List<User> fromList;
+
+    @JsonIgnore
+    @ManyToMany(mappedBy = "fromList",cascade = CascadeType.MERGE)
+    private List<User> toList;
 }
